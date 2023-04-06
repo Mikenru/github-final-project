@@ -1,0 +1,64 @@
+---
+title: "Statistical Inference part 1"
+author: "Mike"
+date: "2023-04-03"
+output: html_document
+---
+
+# Overview
+
+In this report, I will be investigating the exponential distribution in R and 
+compare it with the Central Limit Theorem (CLT). I will be investigating the distribution of averages of 40 exponentials, and a total of a thousand simulations. 
+
+### What is exponential distribution?
+From Wikipedia: Exponential distribution describes times between events happening at constant rate lambda with expected value 1/lambda.
+
+In summary, this report will 
+1. Show the sample mean and compare it to the theoretical mean of the distribution
+2. Show how variable the sample is (via variance) and compare it to the theoretical
+variance of the distribution
+3. Show that the distribution is approximately normal
+
+# Simulation
+
+The exponential distribution is simulated with `rexp(n, lambda)`, where lambda is the rate parameter. The mean of exponential distribution and standard deviation is 1/lambda. Lambda is set at 0.2 for all simulations.
+
+### Sample exponential distribution
+```{r}
+set.seed(666) # to make result reproducible
+nosim <- 1000 # no of simulations
+n <- 40 # no of exponentials
+lambda <- 0.2 # rate parameter 
+simdata <- matrix(rexp(nosim * n, rate=lambda), nosim)
+sim_mean <- rowMeans(simdata) # row means
+# calculate mean, sd and variance of sample exp dist
+simdata_mean <- mean(sim_mean)
+simdata_sd <- sd(sim_mean)
+simdata_var <- var(sim_mean)
+```
+
+Now let's generate a theoretical distribution.
+### Theoretical exponential distribution
+```{r}
+# calculate mean, df and variance of theoretical exp dist
+t_mean = 1/lambda
+t_sd = (1/lambda) * (1/sqrt(n))
+t_var = t_sd^2
+```
+
+
+# Histogram of sample exponential distribution vs Averages of simulated exponentials.
+
+```{r plot 1, echo=FALSE}
+par(mfrow = c(1, 2))
+hist(simdata,
+     main = "Simulated exponential distribution",
+     xlab = "40 random exponentials")
+hist(sim_mean,
+     main = "Averages of Simulated Exponentials",
+     xlab = "Average of 40 exponentials")
+abline(v = t_mean, col = "green", lwd = 2) # theoretical mean
+```
+
+The left histogram shows the simulated exponential distribution
+The right histogram shows
