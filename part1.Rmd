@@ -61,4 +61,59 @@ abline(v = t_mean, col = "green", lwd = 2) # theoretical mean
 ```
 
 The left histogram shows the simulated exponential distribution
-The right histogram shows
+The right histogram shows the averages of simulated exponentials. Shape is close to the normal distribution. 
+The green line represents the theoretical mean of the distribution. MA of simulated distribution is closed to the line.
+
+#Comparison between sample and theoretical statistics
+
+```{r Table 1, echo=FALSE}
+Sample_stats <- c(simdata_mean, simdata_sd, simdata_var)
+Theoretical_stats <- c(t_mean, t_sd, t_var)
+diff <-
+  c(abs(t_mean - simdata_mean),
+    abs(t_sd - simdata_sd),
+    t_var - simdata_var)
+names <- c("Mean", "Std", "Variance")
+data.frame(Sample_stats,
+           Theoretical_stats,
+           diff,
+           row.names =  c("Mean", "Std", "Variance"))
+```
+
+The difference between sample mean and theoretical mean and sample is 0.012
+
+#Distribution
+
+```{r plot 2, echo=FALSE}
+library(ggplot2)
+simdata_mean <- data.frame(sim_mean)
+ggplot(simdata_mean, aes(sim_mean)) +
+    geom_histogram(
+        binwidth = .3,
+        fill = "steelblue",
+        color = "black",
+        aes(y = ..density..)
+    ) +
+    geom_density(color = "blue", lwd = 1) +
+    labs(title = "Distribution of Random Exponential Values with 1000 simulations",
+         x = "Average of 40 Exponentials", y = "Density") +
+    stat_function(
+        fun = dnorm,
+        args = list(mean = t_mean, sd = t_sd),
+        color = "red",
+        lwd = 1
+    ) +
+    theme_bw()
+```
+
+The red line is the theoretical normal distribution density, whereas the blue line is the density of the sample distribution. We can see that the sample distribution is close to normal
+
+```{r plot 3, echo=FALSE}
+qqnorm(sim_mean, col="black") # sample distribution
+qqline(sim_mean, col="red", lwd=3) #theoretical
+```
+
+Observing the normal Q-Q plot, we can conclude that the sample distribution approximates the theoretical normal distribution quite closely, with the tails being less normal.
+
+
+Based on the comparisons and the plots, the simulated sample distribution (as n grows larger) does indeed have similar means and variance with the theoretical distribution. This proves the Central Limit Theorem is correct. 
